@@ -13,6 +13,7 @@ Route::get('/user', function (Request $request) {
 Route::controller(RegisterController::class)->group(function(){
     Route::post('register', 'register');
     Route::post('login', 'login');
+    // Route::get('/showdata', 'fetchdata');
     Route::post('logout', 'logout')->middleware('auth:sanctum');
 });
 Route::controller(TodoController::class)->middleware('auth:sanctum')->group(function(){

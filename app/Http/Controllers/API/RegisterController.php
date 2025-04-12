@@ -5,12 +5,13 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\User;
+use App\Models\Todo;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
-
+use Illuminate\Support\Facades\Http;
 class RegisterController extends BaseController
 {
     /**
@@ -45,7 +46,7 @@ class RegisterController extends BaseController
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        if (Auth::attempt($request->only('email', 'password'))) 
+        if (Auth::attempt($request->only('email', 'password')))
             {
 
             $user = Auth::user();
@@ -65,8 +66,14 @@ class RegisterController extends BaseController
     }
 
 
-    public function logout(Request $request): JsonResponse{
-        $request->user()->tokens()->delete();
-        return response()->json(['message' => 'loggedout successfuly']);
+    public function fetchdata(){
+        // Call the 'fetchdata' endpoint to retrieve the data
+        $data = Http::withoutVerifying()->get('http://localhost:8000/api/fetchdata');
+
+        // Decode the JSON response
+        $d = $data->json();
+
+        // Pass the data to the 'data' view
+        return view('data', compact('d'));
     }
 }
